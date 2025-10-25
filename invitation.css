@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
 /* --------- Theme --------- */
 :root{
@@ -122,37 +123,44 @@ body{
   display:grid; grid-template-columns: repeat(4, 1fr);
   gap: 18px; max-width:1200px; margin:0 auto;
 }
+/* Use consistent full-bleed 'fill' image style for every event card */
 .event-card{
-  background:var(--cream); border:1px dashed var(--soft-gold);
-  border-radius:calc(var(--radius) - 6px); padding:1rem; box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+  background:var(--cream);
+  border:1px dashed var(--soft-gold);
+  border-radius:calc(var(--radius) - 6px);
+  padding:0; /* image fills the card */
+  min-height:160px;
+  box-shadow:var(--shadow);
   transition:transform .25s ease, box-shadow .25s ease;
 }
 .event-card:hover{transform:translateY(-4px); box-shadow:0 16px 32px rgba(0,0,0,.12)}
-.event-icon {
-  width:72px; height:72px; object-fit:cover; border-radius:16px; border:1px solid var(--soft-accent);
-  display:block; margin:4px 0 12px;
-}
-.event-icon-fallback {
-  width:72px;
-  height:72px;
-  display:inline-grid;
-  place-items:center;
-  border-radius:16px;
-  background: linear-gradient(180deg, #fffaf0, #fff4dc);
-  border:1px solid #f0e3bb;
-  color: #b58b00;
-  font-size:22px;
-  margin:4px 0 12px;
-}
-.event-line{margin:.35rem 0}
-.event-note{margin:.5rem 0 0; font-style:italic; color:#6b5a3a}
 
-@media (max-width: 1000px) {
-  .events-grid { grid-template-columns: repeat(2, 1fr); }
+/* image fills the card area */
+.event-card .event-icon{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:center center;
+  opacity:0.24; z-index:0; border-radius:inherit; border:0; pointer-events:none;
+  transform:scale(1.02);
 }
 
-@media (max-width: 520px) {
-  .events-grid { grid-template-columns: 1fr; }
+/* ensure content sits above image and has readable padding */
+.event-card > :not(.event-icon){
+  position:relative; z-index:2; padding:18px;
+}
+.event-card h3{ margin:0 0 .6rem; }
+.event-card .event-line{ margin:.4rem 0; }
+.event-card .event-note{ margin-top:10px; display:block; }
+
+/* fallback icon when image missing should appear above the image */
+.event-card .event-icon-fallback{ position:absolute; top:14px; left:14px; z-index:3; opacity:0.98; }
+
+/* subtle bottom gradient for text contrast on all event cards */
+.event-card:after{
+  content:''; position:absolute; left:0; right:0; bottom:0; height:36%;
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.92) 100%);
+  z-index:1;
 }
 
 /* --------- Venue & Stay --------- */
@@ -322,3 +330,49 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   body { font-size: 15px; }
   .title { font-size: 1.5rem; }
 }
+
+/* --------- Invite Button & Modal --------- */
+.invite-btn{
+  display:inline-block; padding:.6rem 1rem; border-radius:999px; border:1px solid var(--gold);
+  background:#fff; color:var(--ink); cursor:pointer; font-weight:600;
+}
+.invite-btn:hover{transform:translateY(-1px); box-shadow:0 8px 18px rgba(0,0,0,.06)}
+
+.invitation-modal{
+  position:fixed; inset:0; display:grid; place-items:center; z-index:60;
+  background:rgba(0,0,0,0.5); opacity:0; pointer-events:none; transition:opacity .18s ease;
+}
+.invitation-modal.open{opacity: 1; pointer-events:auto}
+.invitation-modal-panel{
+  background:linear-gradient(180deg,#fff,#fffef8); padding:14px; border-radius:18px;
+  box-shadow:0 30px 80px rgba(0,0,0,.4); max-width:92vw; width:720px; max-height:92vh; overflow:auto;
+}
+.invitation-close{position:relative; float:right; background:transparent; border:0; font-size:20px; cursor:pointer}
+.invitation-card{display:block; width:100%; height:auto; border-radius:8px}
+
+@media (max-width:520px){
+  .invitation-modal-panel{ width:94vw; padding:10px; border-radius:12px }
+}
+
+/* thin bottom banner */
+.bottom-banner{
+  position:relative;
+  width:100%;
+  display:flex; align-items:center; justify-content:center;
+  padding:1.2rem 0; /* increased to accommodate larger logo */
+  background:rgba(255,255,255,0.88); backdrop-filter:blur(6px);
+  font-family: 'Great Vibes', 'Playfair Display', serif;
+  color:var(--ink); font-size:34px; letter-spacing:0.04em;
+  border-top:1px solid rgba(0,0,0,0.04);
+}
+.bottom-banner .logo-sp{
+  height:68px; /* doubled size */
+  margin-left:12px;
+  display:inline-block;
+  vertical-align:middle;
+  object-fit:contain;
+  /* nudge logo visually to better align with script baseline */
+  transform: translateY(-8px);
+  align-self:center;
+}
+@media (max-width:520px){ .bottom-banner{ font-size:22px; padding:0.9rem 12px } .bottom-banner .logo-sp{ height:44px } }

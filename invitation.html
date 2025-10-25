@@ -23,7 +23,7 @@
       <div class="hero-inner">
         <h1 class="title">Drishya &amp; Sujith</h1>
         <p class="subtitle">With blessings, we invite you to our celebration</p>
-        <div class="date-pill">Muhurtham • 26 January 2026</div>
+        <button class="invite-btn" aria-haspopup="dialog" aria-controls="invitationModal">View Invitation</button>
       </div>
     </div>
   </header>
@@ -58,17 +58,17 @@
 
       <div class="events-grid">
         <!-- Column 1 -->
-        <article class="event-card">
-          <img class="event-icon" src="icons/henna-leaf-swirls.jpg" alt="Henna cone & leafy swirls" />
-          <h3>Mehendi / Haldi</h3>
+        <article class="event-card mehendi">
+          <img class="event-icon" src="mehendi.png" alt="Henna cone & leafy swirls" />
+          <h3>Mehendi</h3>
           <p class="event-line"><strong>Morning:</strong> <span>Time</span></p>
           <p class="event-note">Henna cone doodles with leafy swirl animation vibe</p>
         </article>
 
         <!-- Column 2 -->
         <article class="event-card">
-          <img class="event-icon" src="icons/lamp-music-shimmer.jpg" alt="Soft lamp with music notes" />
-          <h3>Sangeet</h3>
+          <img class="event-icon" src="temple.jpg" alt="Soft lamp with music notes" />
+          <h3>Temple</h3>
           <p class="event-line"><strong>Evening:</strong> <span>Time</span></p>
           <p class="event-line"><strong>Venue:</strong> <span>Sangeet venue</span></p>
           <p class="event-note">Soft lamp glow → music notes shimmer</p>
@@ -76,16 +76,16 @@
 
         <!-- Column 3 -->
         <article class="event-card">
-          <img class="event-icon" src="icons/flower-trail-temple.jpg" alt="Flower trail and temple icon" />
-          <h3>Wedding Ceremony</h3>
+          <img class="event-icon" src="party.jpg" alt="Flower trail and temple icon" />
+          <h3>Sangeet</h3>
           <p class="event-note">Flower trail drift-in • Temple icon accent</p>
           <p class="event-line"><strong>Muhurtham:</strong> <span>Time</span></p>
         </article>
 
         <!-- Column 4 -->
         <article class="event-card">
-          <img class="event-icon" src="icons/jasmine-garland-rings.jpg" alt="Jasmine garland and rings" />
-          <h3>Reception / Lunch</h3>
+          <img class="event-icon" src="wedding.jpg" alt="Jasmine garland and rings" />
+          <h3>Wedding</h3>
           <p class="event-line"><strong>Timing:</strong> <span>Time</span></p>
           <p class="event-note">Jasmine garland + rings pop-in motif</p>
         </article>
@@ -123,14 +123,19 @@
     </section>
   </main>
 
-  <footer class="footer">
-    <p>With love and gratitude — <strong>Drishya &amp; Sujith</strong></p>
-  </footer>
+  <!-- Invitation modal -->
+  <div id="invitationModal" class="invitation-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="invitation-modal-panel">
+      <button class="invitation-close" aria-label="Close invitation">✕</button>
+      <img src="invitation.jpg" alt="Wedding Invitation" class="invitation-card"/>
+    </div>
+  </div>
 
-  <!-- Tiny, accessible nav toggle without external JS -->
-  <script>
-    // Safe nav toggle (guard in case elements are missing)
+   <!-- Tiny, accessible nav toggle without external JS -->
+   <script>
+    // Safe nav toggle, image fallbacks, and invitation modal
     (function () {
+      // Nav toggle
       const btn = document.querySelector('.nav-toggle');
       const links = document.getElementById('navLinks');
       if (btn && links) {
@@ -141,10 +146,9 @@
         });
       }
 
-      // Provide a graceful fallback for missing event images
+      // Image fallbacks for event icons
       const placeholders = document.querySelectorAll('.event-card img.event-icon, .events-grid img.event-icon');
       placeholders.forEach(img => {
-        // If image already failed to load, trigger the handler
         if (!img.complete || img.naturalWidth === 0) {
           img.dispatchEvent(new Event('error'));
         }
@@ -152,12 +156,42 @@
           img.style.display = 'none';
           const fallback = document.createElement('div');
           fallback.className = 'event-icon-fallback';
-          // try to use emoji from alt text if available
           fallback.textContent = (img.alt || '').split(' ')[0] || '•';
           img.parentNode.insertBefore(fallback, img.nextSibling);
         });
       });
+
+      // Invitation modal logic
+      const openBtn = document.querySelector('.invite-btn');
+      const modal = document.getElementById('invitationModal');
+      const closeBtn = modal && modal.querySelector('.invitation-close');
+
+      function openModal() {
+        if (!modal) return;
+        modal.setAttribute('aria-hidden', 'false');
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeModal() {
+        if (!modal) return;
+        modal.setAttribute('aria-hidden', 'true');
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      if (openBtn) openBtn.addEventListener('click', openModal);
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      // close when clicking outside the panel
+      if (modal) modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+      // close with escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+      });
     })();
-  </script>
-</body>
+   </script>
+
+  <div class="bottom-banner" aria-hidden="true">Website by <img src="sp.png" alt="SP" class="logo-sp"/></div>
+  </body>
 </html>
