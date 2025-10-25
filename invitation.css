@@ -20,11 +20,31 @@ body{
   color:var(--ink);
   font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   font-size:16px; line-height:1.6;
-  background:
-    linear-gradient(var(--bg-dim), var(--bg-dim)),
-    url("background2.jpg") center/cover no-repeat fixed;
+  min-height:100vh;
+  /* explicit background properties to ensure consistent behavior across devices */
+  background-image: linear-gradient(var(--bg-dim), var(--bg-dim)), url("background2.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  /* use scroll by default to avoid mobile rendering issues */
+  background-attachment: scroll;
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
+  background-color: var(--cream-2);
+}
+
+/* Keep fixed attachment on larger screens for desktop parallax */
+@media (min-width: 801px) {
+  body { background-attachment: fixed; }
+}
+
+@media (max-width: 800px) {
+  /* ensure background behaves correctly on mobile devices */
+  body {
+    background-attachment: scroll !important;
+    background-position: center center !important;
+    background-size: cover !important;
+  }
 }
 
 /* --------- Header / Nav / Hero --------- */
@@ -240,6 +260,15 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   }
   .nav-links.open { display: flex; }
   .nav-links a { padding: 8px 12px; width:100%; }
+}
+
+/* ensure background behaves correctly on mobile devices */
+@media (max-width: 800px) {
+  body {
+    background-attachment: scroll;
+    background-position: center top;
+    background-size: cover;
+  }
 }
 
 /* Hero scaling for smaller screens */
