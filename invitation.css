@@ -780,3 +780,12 @@ h1,h2,h3,h4,h5,h6{
 @media (max-width:3600px){ .drishya-large{ max-width:260px } }
 @media (max-width:900px){ .drishya-large{ max-width:180px } }
 @media (max-width:720px){ .drishya-large{ max-width:140px } }
+
+/* Remove white border & shadow for the specific Dicha and Sujith avatar images */
+img.story-avatar[src$="dicha.jpeg"],
+img.story-avatar[src$="sujith.jpeg"],
+img.story-avatar[src$="dicha.jpg"],
+img.story-avatar[src$="sujith.jpg"] {
+  border: none !important;
+  box-shadow: none !important;
+}
