@@ -8,9 +8,13 @@
   <meta name="description" content="Wedding invitation website for Drishya & Sujith" />
 </head>
 <body>
+  <div class="loading" id="pageLoader" aria-hidden="true">
+    <img src="dsLogo.jpg" alt="DS" class="loading-logo"/>
+  </div>
+
   <header class="site-header">
     <nav class="nav">
-      <a class="brand" href="#home" aria-label="Home"><img src="dsLogo.jpg" alt="Drishya & Sujith" class="brand-logo"/></a>
+      <a class="brand" href="#home" aria-label="Home"><img src="topLogo.png" alt="Drishya & Sujith" class="brand-logo"/></a>
       <button class="nav-toggle" aria-expanded="false" aria-controls="navLinks">☰</button>
       <div id="navLinks" class="nav-links">
         <a href="#story">Our Story</a>
@@ -150,6 +154,17 @@
       </div>
     </section>
   </main>
+
+  <script>
+    // Fade out loader when page is ready or after small timeout
+    (function(){
+      const loader = document.getElementById('pageLoader');
+      function hide(){ if(!loader) return; loader.classList.add('fade-out'); }
+      window.addEventListener('load', () => { setTimeout(hide, 1000); });
+      // fallback in case 'load' doesn't fire quickly
+      setTimeout(hide, 1200);
+    })();
+   </script>
 
   <!-- Invitation modal -->
   <div id="invitationModal" class="invitation-modal" role="dialog" aria-modal="true" aria-hidden="true">
