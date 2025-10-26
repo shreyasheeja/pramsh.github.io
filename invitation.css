@@ -401,6 +401,18 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   .date-pill { padding: .35rem .6rem; }
 }
 
+/* Hero with image on left and content on right */
+.hero{ display:flex; align-items:center; justify-content:center; gap:28px; padding:5vh 1rem; }
+#drishyaImg{
+  width:280px; height:auto; border-radius:12px; box-shadow:0 18px 40px rgba(0,0,0,0.16);
+  border:6px solid rgba(255,255,255,0.65); object-fit:cover;
+}
+.hero-content{ max-width:720px }
+@media (max-width:900px){
+  .hero{ flex-direction:column; padding:3vh 1rem }
+  #drishyaImg{ width:68%; max-width:360px }
+}
+
 /* Story grid responsiveness */
 @media (max-width: 900px) {
   .story-grid { grid-template-columns: repeat(2, 1fr); }
