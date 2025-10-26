@@ -145,8 +145,10 @@ body{
 
 /* --------- Story --------- */
 .story-grid{
-  display:grid; gap:18px; max-width:1100px; margin:0 auto;
-  grid-template-columns:repeat(3, minmax(0, 1fr));
+  display:grid; gap:18px; max-width:1600px; margin:0 auto; /* slightly constrained max-width */
+  grid-template-columns: 160px 5fr 5fr 160px; /* smaller outer columns */
+  align-items:center;
+  column-gap:32px; /* reduced horizontal gap so avatars are closer to cards */
 }
 .story-card{
   background:var(--cream); border:1px solid var(--soft-gold);
@@ -156,6 +158,43 @@ body{
 .story-timeline .timeline{list-style:none; padding:0; margin:.2rem 0 0}
 .timeline li{padding:.35rem .2rem; border-left:3px solid var(--ring); margin:.2rem 0 .2rem .4rem}
 .timeline li span{font-weight:700; color:var(--gold); margin-right:.5rem}
+
+/* New story layout: avatar - bride info - groom info - avatar */
+.story-grid{
+  display:grid; gap:18px; max-width:1600px; margin:0 auto; /* increased max-width for wider layout */
+  grid-template-columns: 240px 3fr 3fr 240px; /* make the middle columns wider horizontally */
+  align-items:center;
+  column-gap:96px; /* larger horizontal gap between bride and groom info */
+}
+.story-compact{ display:flex; align-items:center; justify-content:center; background:transparent; border:none; box-shadow:none }
+.story-info{ background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,250,240,0.96)); padding:1rem; border-radius:14px; border:1px solid rgba(215,190,130,0.06); box-shadow:var(--shadow) }
+.story-info h3{ margin:0 0 .4rem; font-size:1.1rem }
+.story-info .brief{ margin:0; color:var(--ink); opacity:0.98 }
+.story-avatar{ width:200px; height:200px; border-radius:50%; object-fit:cover; display:block; margin:0;
+  border:6px solid rgba(255,255,255,0.95); box-shadow: 0 22px 54px rgba(0,0,0,0.14);
+}
+
+/* Ensure bride/groom avatars stay perfectly circular and responsive */
+.story-card.story-compact .story-avatar{
+  width:100%;
+  max-width:220px; /* desktop size */
+  aspect-ratio: 1 / 1; /* enforce square dimensions so border-radius makes a circle */
+  height:auto; /* height follows width via aspect-ratio */
+  border-radius:50%; object-fit:cover; display:block; margin:0;
+  border:6px solid rgba(255,255,255,0.95);
+  box-shadow: 0 26px 64px rgba(0,0,0,0.16);
+}
+@media (max-width:720px){
+  .story-card.story-compact .story-avatar{ max-width:150px }
+}
+
+/* Generic story-avatar fallback (keeps circular shape without forcing fixed width) */
+.story-avatar{
+  width:100%; max-width:220px; aspect-ratio:1/1; height:auto;
+  border-radius:50%; object-fit:cover; display:block; margin:0;
+  border:6px solid rgba(255,255,255,0.9); box-shadow: 0 12px 34px rgba(0,0,0,0.12);
+}
+@media (max-width:720px){ .story-avatar{ max-width:150px } }
 
 /* --------- Events --------- */
 .events-grid{
@@ -200,6 +239,14 @@ body{
   content:''; position:absolute; left:0; right:0; bottom:0; height:36%;
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.92) 100%);
   z-index:1;
+}
+
+/* Event titles (Mehendi, Temple, Sangeet, Wedding) — make black and bold */
+#events .event-card h3 {
+  color: #000 !important;
+  font-weight: 800 !important;
+  font-size: 1.12rem;
+  letter-spacing: 0.01em;
 }
 
 /* --------- Venue & Stay --------- */
@@ -445,6 +492,31 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   .story-card { padding: 0.95rem; }
 }
 
+/* Compact the Our Story section while preserving avatar sizes */
+#story.section-card{
+  padding:36px 1rem; /* reduced vertical space */
+}
+.story-grid{
+  gap:12px; /* tighter spacing between columns */
+  max-width:900px; /* slightly narrower layout */
+}
+#story .story-card{
+  padding:0.85rem; /* smaller card padding */
+  border-radius:16px;
+}
+#story .story-info{
+  padding:0.75rem; /* reduced info box padding */
+}
+#story .story-info .brief{
+  font-size:0.98rem;
+  line-height:1.45;
+}
+#story .section-title{
+  margin-bottom:18px;
+  font-size:clamp(1.2rem, 2.2vw, 1.6rem);
+}
+/* end compact story adjustments */
+
 /* Events grid smaller breakpoints */
 @media (max-width: 1000px) {
   .events-grid { grid-template-columns: repeat(2, 1fr); }
@@ -561,4 +633,113 @@ h1,h2,h3,h4,h5,h6{
 /* also ensure prominent heading classes use same yellow (override other rules) */
 .title, .section-title, .ph-caption h3, .story-card h3, .event-card h3, .venue-card h3{
   color: #f6d04a !important;
+}
+
+.story-avatar{
+  width:110px; height:110px; border-radius:50%; object-fit:cover; display:block; margin:0 0 12px;
+  border:6px solid rgba(255,255,255,0.9); box-shadow: 0 12px 34px rgba(0,0,0,0.12);
+}
+@media (max-width:720px){ .story-avatar{ width:86px; height:86px } }
+
+/* Expand Our Story horizontally (override previous settings) */
+.story-grid{
+  max-width:2200px; /* allow very wide layouts */
+  grid-template-columns: 240px 5fr 5fr 240px; /* make the two middle columns much wider */
+  column-gap:140px; /* larger horizontal separation */
+}
+.story-info{
+  padding:1rem 1.2rem; /* slight increase so content breathes in wider layout */
+}
+
+/* Mobile-specific overrides for Our Story to ensure correct stacking */
+@media (max-width: 900px) {
+  .story-grid {
+    grid-template-columns: 1fr !important; /* stack into a single column */
+    max-width: 95% !important;
+    gap: 12px !important;
+    column-gap: 16px !important;
+    align-items: start;
+    margin-left: auto; margin-right: auto;
+  }
+
+  .story-card.story-compact {
+    display:flex; justify-content:center; padding:0; margin:0;
+  }
+
+  .story-card.story-compact .story-avatar,
+  .story-avatar {
+    max-width:160px !important; width: 160px !important; height: auto !important;
+    aspect-ratio: 1/1; margin: 0 auto 12px; display:block;
+    box-shadow: 0 18px 44px rgba(0,0,0,0.12);
+  }
+
+  .story-info {
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0.9rem !important;
+    border-radius: 8px !important;
+    margin: 0 !important;
+  }
+}
+
+/* Compact Our Story spacing */
+.story-grid{
+  /* narrower overall container and tighter spacing */
+  max-width:1200px; /* limit to a comfortable width */
+  grid-template-columns: 140px 4fr 4fr 140px; /* smaller outer avatar columns */
+  gap:10px; /* reduce vertical & horizontal gap */
+  column-gap:20px; /* reduce horizontal gap between columns */
+  margin:0 auto;
+  align-items:center;
+}
+
+.story-card{ padding:0.6rem; border-radius:12px; }
+.story-card.story-compact{ padding:0; margin:0; display:flex; align-items:center; justify-content:center }
+
+.story-info{
+  padding:0.6rem 0.75rem; /* tighter padding */
+  margin:0 4px; /* remove extra breathing room */
+  max-height:none; overflow:visible;
+}
+
+/* Slightly reduce avatar so it fits closer to the card */
+.story-card.story-compact .story-avatar,
+.story-avatar{
+  max-width:160px; width:100%; aspect-ratio:1/1; height:auto; margin:0 auto 8px;
+}
+
+@media (max-width:900px){
+  .story-grid{ grid-template-columns: 1fr !important; max-width:95% }
+  .story-card.story-compact .story-avatar, .story-avatar{ max-width:140px }
+  .story-info{ padding:0.8rem }
+}
+
+@media (max-width:720px){
+  /* ensure story layout fits the viewport and doesn't cause horizontal scroll */
+  .story-grid{
+    grid-template-columns: 1fr !important;
+    max-width: 100% !important;
+    padding: 0 12px;
+    gap:10px;
+    column-gap:12px;
+    box-sizing: border-box;
+    margin-left:auto; margin-right:auto;
+  }
+
+  .story-info{
+    width:100% !important;
+    max-width:100% !important;
+    margin:6px 0 !important;
+    padding:0.8rem !important;
+  }
+
+  .story-card.story-compact{ padding:0; margin:0 }
+  .story-card.story-compact .story-avatar,
+  .story-avatar{
+    max-width:120px !important; width:120px !important; height:auto !important;
+    margin:0 auto 10px; display:block;
+  }
+
+  /* prevent any horizontal overflow on very small devices */
+  body{ overflow-x: hidden; }
 }
