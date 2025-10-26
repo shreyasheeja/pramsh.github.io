@@ -327,7 +327,14 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   backdrop-filter: blur(6px);
   transition: opacity .42s ease, visibility .42s ease;
 }
-.loading img, .loading-logo{ width:140px; height:auto; display:block }
+/* Increase loader logo size (override previous values) */
+.loading img, .loading-logo {
+  width:250px; /* slightly bigger */
+  height:auto;
+}
+@media (max-width:520px){
+  .loading img, .loading-logo { width:128px }
+}
 .loading.fade-out{ opacity:0; visibility:hidden; pointer-events:none }
 /* fallback small-screen size */
 @media (max-width:520px){ .loading img, .loading-logo{ width:96px } }
