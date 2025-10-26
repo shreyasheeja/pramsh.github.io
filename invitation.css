@@ -111,11 +111,25 @@ body{
   font-family: 'Playfair Display', serif;
   font-weight:700;
 }
-.subtitle{margin:.1rem 0 1rem; opacity:.85}
+.subtitle{
+  margin: .1rem 0 1rem;
+  color: #2a1f12 !important; /* darker, high-contrast ink */
+  font-weight: 700;
+  font-size: 1.02rem;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  display: inline-block;
+  opacity: 1;
+}
 .date-pill{
   display:inline-block; padding:.45rem .9rem; border-radius:999px;
   background:var(--gold); color:#fff; letter-spacing:.03em;
   box-shadow:0 6px 18px rgba(183,139,45,.28);
+}
+
+/* Ensure invite button sits on the line below the subtitle */
+.hero-content .invite-btn{
+  display: block;
+  margin: 0.6rem auto 0; /* center horizontally */
 }
 
 /* --------- Sections --------- */
