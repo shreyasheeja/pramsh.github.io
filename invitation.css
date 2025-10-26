@@ -3,7 +3,7 @@
 
 /* --------- Theme --------- */
 :root{
-  --bg-dim: rgba(24,17,6,.55);         /* dark overlay over background */
+  --bg-dim: rgba(24,17,6,.68);         /* darker overlay over background (was .55) */
   --cream: #fff8e8;
   --cream-2: #f8f1df;
   --ink: #4b3f2c;
@@ -178,10 +178,58 @@ body{
   grid-template-columns:repeat(2, minmax(0, 1fr));
 }
 .venue-card{
+  position:relative;
+  overflow:hidden;
   background:var(--cream); border:1px solid var(--soft-gold); border-radius:var(--radius);
   padding:1.2rem; box-shadow:var(--shadow);
 }
-.stay-list{margin:.4rem 0 0 1rem}
+.venue-card .venue-img{
+  display:block; width:100%; height:220px; object-fit:cover; border-radius:12px 12px 0 0;
+}
+@media (max-width:600px){ .venue-card .venue-img{ height:140px } }
+
+/* Venue & Stay background: use layered pseudo-elements so the image can be brightened and stretched */
+#venue.section-card, section#venue.section-card{
+  position:relative;
+  overflow:visible;
+  background-color: var(--cream-2);
+  min-height:480px; /* increased so contained image is visible without cropping */
+}
+
+#venue.section-card::before{
+  content: "";
+  position:absolute;
+  /* extend slightly above the section so the image covers any white gap */
+  inset: -6% 0 -2% 0; /* top, right, bottom, left */
+  background-image: url("weddingBlock.png");
+  background-repeat: no-repeat;
+  /* stretch slightly more than width to remove edge white space */
+  background-position: center top;
+  background-size: 110% auto; /* a bit larger than 100% to cover edges */
+  /* reduce brightness/saturation so the image appears more muted */
+  filter: brightness(0.86) saturate(0.96);
+   z-index:0;
+   transform:translateZ(0);
+ }
+ 
+ #venue.section-card::after{
+   /* gentle cream overlay to keep text readable */
+   content: "";
+   position:absolute; inset:0;
+   /* lower overlay opacity to tone down overall brightness */
+   background: linear-gradient(180deg, rgba(255,248,232,0.6), rgba(255,248,232,0.55));
+   z-index:1;
+ }
+
+/* ensure venue content sits above the image and overlay */
+#venue.section-card > .venue-grid, #venue.section-card *{
+  position:relative; z-index:2;
+}
+
+@media (max-width:900px){
+  #venue.section-card{ min-height:340px }
+  #venue.section-card::before{ background-position: center top; background-size: 120% auto; inset: -8% 0 -4% 0 }
+}
 
 /* --------- RSVP --------- */
 .rsvp{
@@ -208,7 +256,35 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   display:grid; gap:12px; max-width:1100px; margin:0 auto;
   grid-template-columns:repeat(3, minmax(0, 1fr));
 }
-.ph{aspect-ratio:4/3; border-radius:14px; background:linear-gradient(135deg, #f3ead4, #efe2c1); border:1px solid var(--soft-gold)}
+
+/* Gallery placeholder — elegant, 'royal' captions */
+.ph{
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:1.2rem;
+  min-height:180px;
+  border-radius:14px;
+  background:linear-gradient(180deg, rgba(255,250,243,0.95), rgba(255,245,230,0.9));
+  border:1px solid rgba(215,190,130,0.12);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.03);
+}
+.ph-caption h3{
+  margin:0; font-family:'Playfair Display', serif; font-weight:700;
+  font-size:1.6rem; color:var(--gold); letter-spacing:0.02em;
+  text-shadow: 0 3px 12px rgba(183,139,45,0.06);
+}
+.ph-caption p{
+  margin:10px 0 0; font-family:'Cormorant Garamond', serif; font-style:italic;
+  color:var(--ink); opacity:0.92; font-size:1rem; line-height:1.45;
+}
+
+/* make captions breathe on small screens */
+@media (max-width:720px){
+  .ph{ padding:0.9rem; min-height:140px }
+  .ph-caption h3{ font-size:1.35rem }
+  .ph-caption p{ font-size:0.95rem }
+}
 
 /* --------- Footer --------- */
 .footer{
@@ -406,3 +482,28 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   align-self:center;
 }
 @media (max-width:520px){ .bottom-banner{ font-size:22px; padding:0.9rem 12px } .bottom-banner .logo-sp{ height:44px } }
+
+/* --------- Video Embeds --------- */
+.video-embed{
+  max-width:920px; margin:0 auto 14px; width:100%;
+  aspect-ratio: 16 / 9; /* modern browsers */
+  border-radius:12px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.12);
+  background: #000;
+}
+.video-embed iframe{ width:100%; height:100%; border:0; display:block; }
+
+/* ensure the live-section button sits nicely under the embed */
+.live-section .btn{ margin-top:12px; }
+
+/* Make live-section subtitle more visible against background */
+.live-section .subtitle{
+  color:var(--ink);
+  opacity:1;
+  font-weight:600;
+  background: rgba(255,255,255,0.94);
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  margin-bottom:12px;
+}
