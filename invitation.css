@@ -4,12 +4,12 @@
 /* --------- Theme --------- */
 :root{
   --bg-dim: rgba(24,17,6,.68);         /* darker overlay over background (was .55) */
-  --cream: #fff8e8;
-  --cream-2: #f8f1df;
+  --cream: #fff8e8;    /* pale rose */
+  --cream-2: #f8f1df;  /* slightly deeper */
   --ink: #4b3f2c;
-  --gold: #b78b2d; /* restored golden accent for text/buttons */
-  --soft-gold: #e7d3a2;
-  --ring: #d98aa6;
+  --gold: #b78b2d;     /* primary rose accent */
+  --soft-gold: #e7d3a2;/* soft pastel fill */
+  --ring: #d98aa6;     /* accent ring */
   --radius: 22px;
   --shadow: 0 10px 30px rgba(0,0,0,.08);
   --nav-height: 60px; /* height used for fixed mobile nav */
@@ -73,9 +73,22 @@ body{
 }
 .nav-links{display:flex; gap:.9rem}
 .nav-links a{
-  color:var(--ink); text-decoration:none; padding:.4rem .7rem; border-radius:999px;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:0.5rem 0.95rem; border-radius:999px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,248,232,0.88));
+  border:1px solid rgba(183,139,45,0.12);
+  color:var(--ink); text-decoration:none; font-weight:600;
+  box-shadow: 0 8px 22px rgba(183,139,45,0.06);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
 }
-.nav-links a:hover{background:rgba(255,255,255,.6)}
+.nav-links a:hover,
+.nav-links a:focus{
+  transform:translateY(-3px);
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), var(--gold));
+  color:#fff; box-shadow:0 18px 48px rgba(183,139,45,0.18);
+  outline: none;
+}
+.nav-links a:focus{ outline: 3px solid rgba(183,139,45,0.14); outline-offset:3px }
 .nav-toggle{display:none; border:0; background:transparent; font-size:1.35rem}
 
 .hero{
@@ -114,7 +127,21 @@ body{
   font-weight:600;
 }
 .section-card{background:linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,.55))}
-.section-cream{background:linear-gradient(180deg, rgba(255,248,232,.9), rgba(255,248,232,.7))}
+.section-cream{ background: transparent }
+
+/* Make only Story and Gallery sections transparent so the page background shows through */
+#story.section-card,
+#gallery.section-card {
+  background: transparent !important;
+}
+
+/* Make Story subtly distinct while keeping Gallery transparent */
+#story.section-card{
+  /* very light warm tint so the page background still shows through */
+  background: linear-gradient(180deg, rgba(255, 248, 232, 0.371), rgba(255,248,232,0.0371)) !important;
+  border-radius: calc(var(--radius));
+}
+#gallery.section-card{ background: transparent !important; }
 
 /* --------- Story --------- */
 .story-grid{
@@ -191,42 +218,33 @@ body{
 }
 @media (max-width:600px){ .venue-card .venue-img{ height:140px } }
 
-/* Venue & Stay background: use layered pseudo-elements so the image can be brightened and stretched */
+/* Venue & Stay: show the page background directly (remove internal background layers) */
 #venue.section-card, section#venue.section-card{
   position:relative;
   overflow:visible;
-  background-color: var(--cream-2);
-  min-height:480px; /* increased so contained image is visible without cropping */
+  background: transparent; /* use page background */
+  min-height:480px; /* keep space for content */
 }
 
-#venue.section-card::before{
-  content: "";
-  position:absolute;
-  /* extend slightly above the section so the image covers any white gap */
-  inset: -6% 0 -2% 0; /* top, right, bottom, left */
-  background-image: url("weddingBlock.png");
-  background-repeat: no-repeat;
-  /* stretch slightly more than width to remove edge white space */
-  background-position: center top;
-  background-size: 110% auto; /* a bit larger than 100% to cover edges */
-  /* reduce brightness/saturation so the image appears more muted */
-  filter: brightness(0.86) saturate(0.96);
-   z-index:0;
-   transform:translateZ(0);
- }
- 
- #venue.section-card::after{
-   /* gentle cream overlay to keep text readable */
-   content: "";
-   position:absolute; inset:0;
-   /* lower overlay opacity to tone down overall brightness */
-   background: linear-gradient(180deg, rgba(255,248,232,0.6), rgba(255,248,232,0.55));
-   z-index:1;
- }
+/* disable decorative pseudo-elements so they don't cover the page background */
+#venue.section-card::before,
+#venue.section-card::after{
+  content: none !important;
+  display: none !important;
+}
 
-/* ensure venue content sits above the image and overlay */
+/* hide the extra garland highlight image (if present) to avoid covering the page background */
+.venue-garland-highlight{ display:none !important }
+
+/* ensure venue content still sits above any remaining layers */
 #venue.section-card > .venue-grid, #venue.section-card *{
   position:relative; z-index:2;
+}
+
+/* Make Venue & Stay visually match the Our Story section */
+#venue.section-card{
+  background: linear-gradient(180deg, rgba(255, 248, 232, 0.371), rgba(255,248,232,0.0371)) !important;
+  border-radius: calc(var(--radius));
 }
 
 @media (max-width:900px){
@@ -251,8 +269,13 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   display:inline-block; padding:.7rem 1rem; border-radius:999px; border:1px solid var(--gold);
   text-decoration:none; color:var(--ink); background:#fff; transition:all .2s ease;
 }
-.btn:hover{transform:translateY(-1px); box-shadow:0 8px 18px rgba(0,0,0,.08)}
-.btn-gold{background:var(--gold); color:#fff; border-color:transparent}
+.btn:hover{ background: linear-gradient(180deg, rgba(255,245,210,0.98), rgba(255,238,170,0.98)); transform: translateY(-3px); box-shadow:0 20px 40px rgba(183,139,45,0.12) }
+.btn-gold{
+  background: linear-gradient(180deg, #d4ad4f, var(--gold));
+  color:#fff; border-color: rgba(0,0,0,0.06);
+  box-shadow: 0 14px 40px rgba(183,139,45,0.18);
+}
+.btn-gold:hover{ background: linear-gradient(180deg, #f2c96a, #c79a3a); transform:translateY(-3px); box-shadow: 0 22px 56px rgba(183,139,45,0.22) }
 
 /* --------- Gallery --------- */
 .gallery-grid{
@@ -459,9 +482,11 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
 /* --------- Invite Button & Modal --------- */
 .invite-btn{
   display:inline-block; padding:.6rem 1rem; border-radius:999px; border:1px solid var(--gold);
-  background:#fff; color:var(--ink); cursor:pointer; font-weight:600;
+  background: linear-gradient(180deg, #ffeaa8, var(--gold));
+  color:#2a1f12; border:0; font-weight:800; padding:.9rem 1.4rem;
+  box-shadow: 0 16px 44px rgba(183,139,45,0.18);
 }
-.invite-btn:hover{transform:translateY(-1px); box-shadow:0 8px 18px rgba(0,0,0,.06)}
+.invite-btn:hover{ transform:translateY(-3px); box-shadow:0 28px 68px rgba(183,139,45,0.22) }
 
 .invitation-modal{
   position:fixed; inset:0; display:grid; place-items:center; z-index:60;
@@ -525,4 +550,15 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   border-radius:10px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.06);
   margin-bottom:12px;
+}
+
+/* rose-pink overrides removed — using original palette */
+
+/* Headings: use yellow tone for all headings and common heading classes */
+h1,h2,h3,h4,h5,h6{
+  color: #f6d04a; /* warm yellow */
+}
+/* also ensure prominent heading classes use same yellow (override other rules) */
+.title, .section-title, .ph-caption h3, .story-card h3, .event-card h3, .venue-card h3{
+  color: #f6d04a !important;
 }
