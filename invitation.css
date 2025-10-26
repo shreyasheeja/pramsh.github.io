@@ -12,6 +12,7 @@
   --ring: #d98aa6;
   --radius: 22px;
   --shadow: 0 10px 30px rgba(0,0,0,.08);
+  --nav-height: 60px; /* height used for fixed mobile nav */
 }
 
 *{box-sizing:border-box}
@@ -57,9 +58,17 @@ body{
   background:rgba(255,248,232,.45); border-bottom:1px solid rgba(215,190,130,.35);
 }
 .brand{
-  font-weight:700; letter-spacing:.08em; text-decoration:none;
-  color:var(--gold); border:2px solid var(--gold);
-  padding:.2rem .55rem; border-radius:999px; background:rgba(255,255,255,.6);
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  padding:0; /* let nav control spacing */
+  background:transparent;
+  overflow:visible;
+}
+.brand-logo{
+  height:auto; width:auto; display:block;
+  max-height:44px; /* desktop target */
+  object-fit:contain; background:transparent; border-radius:0; border:0;
 }
 .nav-links{display:flex; gap:.9rem}
 .nav-links a{
@@ -254,7 +263,7 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   .nav-links {
     display: none; /* hidden until opened */
     position: absolute;
-    top: 56px;
+    top: var(--nav-height);
     right: 12px;
     background: rgba(255,255,255,0.95);
     border-radius: 12px;
@@ -268,6 +277,27 @@ input:focus, textarea:focus{outline:2px solid rgba(183,139,45,.35)}
   }
   .nav-links.open { display: flex; }
   .nav-links a { padding: 8px 12px; width:100%; }
+
+  /* Make the top navigation fixed on mobile so it stays visible while scrolling */
+  .site-header{ position: static !important; }
+  .nav{
+    position:fixed !important;
+    top:0; left:0; right:0;
+    height:var(--nav-height);
+    align-items:center;
+    padding:0 1rem;
+    z-index:50;
+    backdrop-filter:saturate(120%) blur(6px);
+    background: rgba(255,248,232,.9);
+    border-bottom:1px solid rgba(215,190,130,.25);
+    display:flex;
+  }
+
+  /* ensure nav brand and toggle are vertically centered inside fixed nav */
+  .nav .brand, .nav .nav-toggle { align-self: center; }
+
+  /* prevent page content from sliding under the fixed nav */
+  body{ padding-top: calc(var(--nav-height)); }
 }
 
 /* ensure background behaves correctly on mobile devices */
